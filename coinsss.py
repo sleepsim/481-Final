@@ -23,8 +23,8 @@ def display_text():
    label.configure(text=string)
 
 #label that displays input
-label= tk.Label(main, text="", font=('Arial',18))
-label.place(x=30, y =200)
+# label= tk.Label(main, text="", font=('Arial',18))
+# label.place(x=30, y =200)
 
 #entry widget for uploads
 entry= tk.Entry(main, width= 40)
@@ -34,7 +34,17 @@ entry.place(x= 155, y= 85)
 #button to log entries
 ttk.Button(main, text= "Add to List",width= 30, command= display_text).place(x=30, y =130)
 
+listVar = tk.StringVar(value=["x","y","z"])
+my_listbox = tk.Listbox(main, listvariable=listVar)
+my_listbox.place(x= 30, y=200)
 
+def delete():
+   selected_checkboxs = my_listbox.curselection() 
+  
+   for selected_checkbox in selected_checkboxs[::-1]: 
+        my_listbox.delete(selected_checkbox) 
 
+my_button = tk.Button(main, text ="Delete", command= delete)
+my_button.place(x= 30, y= 400)
 
 main.mainloop()
