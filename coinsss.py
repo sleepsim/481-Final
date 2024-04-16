@@ -64,21 +64,27 @@ def GetCoinValue(input):
    match input:
       case "Penny":
          totalAmount += 0.01;
+         totalAmount = round(totalAmount, 2)
          pennyCount += 1;
       case "Nickel":
          totalAmount += 0.05;
+         totalAmount = round(totalAmount, 2)
          nickelCount += 1;
       case "Dime":
          totalAmount += 0.1;
+         totalAmount = round(totalAmount, 2)
          dimeCount += 1;
       case "Quarter":
          totalAmount += 0.25;
+         totalAmount = round(totalAmount, 2)
          quarterCount += 1;
       case "Loonie":
          totalAmount += 1;
+         totalAmount = round(totalAmount, 2)
          loonieCount += 1;
       case "Toonie":
          totalAmount += 2;
+         totalAmount = round(totalAmount, 2)
          toonieCount += 1;
       case _:
          totalAmount += 0;
@@ -105,12 +111,34 @@ def Run():
          class_names = [result.names[int(cls)] for cls in class_indices]  # Map indices to names
          for item in class_names:
             GetCoinValue(item)
-            print("after addition: " + str(totalAmount))
+            # print("after addition: " + str(totalAmount))
    
 def display_text():
    global totalAmount
-   string= totalAmount
+   string= "~$" + str(totalAmount)
    label.configure(text=string)
+   
+def updateCoinCount():
+   global pennyCount, nickelCount, dimeCount, quarterCount, loonieCount, toonieCount
+   pennyDisplay.configure(text="Penny Count: " + str(pennyCount))
+   nickelDisplay.configure(text="Nickel Count: " + str(nickelCount))
+   dimeDisplay.configure(text="Dime Count: " + str(dimeCount))
+   quarterDisplay.configure(text="Quarter Count: " + str(quarterCount))
+   loonieDisplay.configure(text="Loonie Count: " + str(loonieCount))
+   toonieDisplay.configure(text="Toonie Count: " + str(toonieCount))
+
+def resetCoinCount():
+   global pennyCount, nickelCount, dimeCount, quarterCount, loonieCount, toonieCount, totalAmount
+   totalAmount = 0;
+   pennyCount = 0
+   nickelCount = 0
+   dimeCount = 0
+   quarterCount = 0
+   loonieCount = 0
+   toonieCount = 0
+   display_text()
+   updateCoinCount()
+   
 
 #_______________MAIN__________________
 
@@ -158,7 +186,7 @@ toonieDisplay.place(x=600, y=340)
 
 #________________________________
 
-button = tk.Button(main, text="Run", font=('Arial',16), command=lambda: [Run(), display_text()] )
+button = tk.Button(main, text="Run", font=('Arial',16), command=lambda: [Run(), display_text(), updateCoinCount()] )
 button.place(x= 450, y=450,height=50, width=100)
 
 #button to log entries
@@ -178,6 +206,9 @@ delAll.place(x= 210, y= 380)
 label= tk.Label(main, text="", font=('Arial',18))
 label.place(x=600, y =375) 
 
+resetButton = tk.Button(main, text ="Reset Values", command= resetCoinCount)
+resetButton.place(x=800, y =380) 
+
 #_________AI MODEL_________
 from ultralytics import YOLO
 import sys, os
@@ -190,20 +221,20 @@ print('Root path:', sys.path[1])
 modelLocation = os.getcwd() + "\Model\\best.pt"
 model = YOLO(modelLocation)
 
-link = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\23-P.jpg"
-link2 = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\29-P.jpg"
+# link = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\23-P.jpg"
+# link2 = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\29-P.jpg"
 
-Predict with the model with any image from internet
-results = model((link2, link))
+# # Predict with the model with any image from internet
+# results = model((link2, link))
 
-for result in results:
-   boxes = result.boxes  # Boxes object for bbox outputs
-   class_indices = boxes.cls  # Class indices of the detections
-   class_names = [result.names[int(cls)] for cls in class_indices]  # Map indices to names
+# for result in results:
+#    boxes = result.boxes  # Boxes object for bbox outputs
+#    class_indices = boxes.cls  # Class indices of the detections
+#    class_names = [result.names[int(cls)] for cls in class_indices]  # Map indices to names
    
-   for item in class_names:
-      GetCoinValue(item)
-      print("after addition: " + str(totalAmount))
+#    for item in class_names:
+#       GetCoinValue(item)
+#       print("after addition: " + str(totalAmount))
 
 
 
