@@ -1,8 +1,13 @@
+import multiprocessing
 import tkinter as tk
+import os
 from tkinter import ttk, filedialog;
+from ultralytics import YOLO
 
 global filenamesHolder, uniqueFiles, totalAmount
 global pennyCount, nickelCount, dimeCount, quarterCount, loonieCount, toonieCount
+
+multiprocessing.freeze_support()
 
 pennyCount = 0
 nickelCount = 0
@@ -112,6 +117,7 @@ def Run():
          for item in class_names:
             GetCoinValue(item)
             # print("after addition: " + str(totalAmount))
+   pastResults_listbox.insert('end', totalAmount)
    
 def display_text():
    global totalAmount
@@ -186,19 +192,23 @@ toonieDisplay.place(x=600, y=340)
 
 #________________________________
 
+# Run Button
 button = tk.Button(main, text="Run", font=('Arial',16), command=lambda: [Run(), display_text(), updateCoinCount()] )
-button.place(x= 450, y=450,height=50, width=100)
+button.place(x= 30, y=450,height=50, width=100)
 
 #button to log entries
 ttk.Button(main, text= "Upload Images",width= 30, command= UploadAction).place(x=30, y = 80)
 
+#List files uploaded
 listVar = tk.StringVar(value = filenamesHolder)
 my_listbox = tk.Listbox(main, listvariable=listVar, width = 80, selectmode= "extended")
 my_listbox.place(x= 30, y=200)
 
+# Remove selected button
 delSelected = tk.Button(main, text ="Remove Selected from List", command= delete)
 delSelected.place(x= 30, y= 380)
 
+# Delete all button
 delAll = tk.Button(main, text ="Remove All from List", command= deleteAll)
 delAll.place(x= 210, y= 380)
 
@@ -206,36 +216,22 @@ delAll.place(x= 210, y= 380)
 label= tk.Label(main, text="", font=('Arial',18))
 label.place(x=600, y =375) 
 
+# Reset Button
 resetButton = tk.Button(main, text ="Reset Values", command= resetCoinCount)
-resetButton.place(x=800, y =380) 
+resetButton.place(x=800, y =380)
+
+pResultString = ("Previous Values: ")
+prevResult = tk.Label(main, text=pResultString,font=('Arial',14))
+prevResult.place(x = 600, y=450) 
+
+# Past results listbox
+pastResults_listbox = tk.Listbox(main, width = 30, height=5, selectmode= "extended")
+pastResults_listbox.place(x= 600, y=480)
 
 #_________AI MODEL_________
-from ultralytics import YOLO
-import sys, os
-
-print('My nested folder : ', os.getcwd()+"\Model\\best.pt")
-print('File name : ', os.path.basename(__file__))
-print('Root path:', sys.path[1])
 
 #Get the pretrained model ready
 modelLocation = os.getcwd() + "\Model\\best.pt"
 model = YOLO(modelLocation)
-
-# link = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\23-P.jpg"
-# link2 = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\29-P.jpg"
-
-# # Predict with the model with any image from internet
-# results = model((link2, link))
-
-# for result in results:
-#    boxes = result.boxes  # Boxes object for bbox outputs
-#    class_indices = boxes.cls  # Class indices of the detections
-#    class_names = [result.names[int(cls)] for cls in class_indices]  # Map indices to names
-   
-#    for item in class_names:
-#       GetCoinValue(item)
-#       print("after addition: " + str(totalAmount))
-
-
 
 main.mainloop()
