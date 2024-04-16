@@ -42,6 +42,9 @@ def delete():
    for selected_checkbox in selected_checkboxs[::-1]: 
         my_listbox.delete(selected_checkbox) 
 
+def deleteAll():
+   my_listbox.delete(0,tk.END) 
+
 def Reset():
    global totalAmount;
    global pennyCount, nickelCount, dimeCount, quarterCount, loonieCount, toonieCount
@@ -121,8 +124,42 @@ titleM.place(x=30, y =30)
 uploadT = tk.Label(main, text="Uploaded files:", font=('Arial',  16))
 uploadT.place(x=30, y=150)
 
+# Display for coins counted
+
+pString = ("Penny Count: ", pennyCount)
+pennyString = ' '.join(map(str,pString))
+pennyDisplay = tk.Label(main, text=(pennyString), font=('Arial',  16))
+pennyDisplay.place(x=600, y=165)
+
+nString = ("Nickel Count: ", nickelCount)
+nickelString = ' '.join(map(str,nString))
+nickelDisplay = tk.Label(main, text=(nickelString), font=('Arial',  16))
+nickelDisplay.place(x=600, y=200)
+
+dString = ("Dime Count: ", dimeCount)
+dimeString = ' '.join(map(str,dString))
+dimeDisplay = tk.Label(main, text=(dimeString), font=('Arial',  16))
+dimeDisplay.place(x=600, y=235)
+
+qString = ("Quarter Count: ", quarterCount)
+quarterString = ' '.join(map(str,qString))
+quarterDisplay = tk.Label(main, text=(quarterString), font=('Arial',  16))
+quarterDisplay.place(x=600, y=270)
+
+lString = ("Loonie Count: ", loonieCount)
+loonieString = ' '.join(map(str,lString))
+loonieDisplay = tk.Label(main, text=(loonieString), font=('Arial',  16))
+loonieDisplay.place(x=600, y=305)
+
+tString = ("Toonie Count: ", toonieCount)
+toonieString = ' '.join(map(str,tString))
+toonieDisplay = tk.Label(main, text=(toonieString), font=('Arial',  16))
+toonieDisplay.place(x=600, y=340)
+
+#________________________________
+
 button = tk.Button(main, text="Run", font=('Arial',16), command=lambda: [Run(), display_text()] )
-button.place(x= 450, y=400,height=50, width=100)
+button.place(x= 450, y=450,height=50, width=100)
 
 #button to log entries
 ttk.Button(main, text= "Upload Images",width= 30, command= UploadAction).place(x=30, y = 80)
@@ -131,12 +168,15 @@ listVar = tk.StringVar(value = filenamesHolder)
 my_listbox = tk.Listbox(main, listvariable=listVar, width = 80, selectmode= "extended")
 my_listbox.place(x= 30, y=200)
 
-my_button = tk.Button(main, text ="Delete", command= delete)
-my_button.place(x= 30, y= 400)
+delSelected = tk.Button(main, text ="Remove Selected from List", command= delete)
+delSelected.place(x= 30, y= 380)
 
-#label that displays input
+delAll = tk.Button(main, text ="Remove All from List", command= deleteAll)
+delAll.place(x= 210, y= 380)
+
+#label that displays output
 label= tk.Label(main, text="", font=('Arial',18))
-label.place(x=30, y =450) 
+label.place(x=600, y =375) 
 
 #_________AI MODEL_________
 from ultralytics import YOLO
@@ -153,17 +193,17 @@ model = YOLO(modelLocation)
 link = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\23-P.jpg"
 link2 = "C:\\Users\\Pocholo\\Desktop\\481\\CV_Project\\images\\train\\29-P.jpg"
 
-#Predict with the model with any image from internet
-# results = model((link2, link))
+Predict with the model with any image from internet
+results = model((link2, link))
 
-# for result in results:
-#    boxes = result.boxes  # Boxes object for bbox outputs
-#    class_indices = boxes.cls  # Class indices of the detections
-#    class_names = [result.names[int(cls)] for cls in class_indices]  # Map indices to names
+for result in results:
+   boxes = result.boxes  # Boxes object for bbox outputs
+   class_indices = boxes.cls  # Class indices of the detections
+   class_names = [result.names[int(cls)] for cls in class_indices]  # Map indices to names
    
-#    for item in class_names:
-#       GetCoinValue(item)
-#       print("after addition: " + str(totalAmount))
+   for item in class_names:
+      GetCoinValue(item)
+      print("after addition: " + str(totalAmount))
 
 
 
